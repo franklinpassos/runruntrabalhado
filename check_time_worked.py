@@ -309,10 +309,10 @@ def main():
             limit_pct = int(THRESHOLD2 * 100)
             txt_lines = [
                 f"⚠️ Alerta: {limit_pct}% do tempo trabalhado atingido",
-                f"Auditor: {u_name}",
-                f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
-                f"Percentual de hoje: {worked_pct:.1f}%",  # <-- nova linha
-                f"Líder: {leader_text}",
+                f"👤 Auditor: {u_name}",
+                f"🕒 Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
+                f"📊 Percentual de hoje: {worked_pct:.1f}%",  # <-- nova linha
+                f"🧭 Líder: {leader_text}",
             ]
             tg_send("\n".join(txt_lines))
             continue  # não manda o de 105% nesta execução
@@ -331,10 +331,10 @@ def main():
             limit_pct = int(THRESHOLD1 * 100)
             txt_lines = [
                 f"⚠️ Alerta: {limit_pct}% do tempo trabalhado atingido",
-                f"Auditor: {u_name}",
-                f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
-                f"Percentual de hoje: {worked_pct:.1f}%",  # <-- nova linha
-                f"Líder: {leader_text}",
+                f"👤 Auditor: {u_name}",
+                f"🕒 Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
+                f"📊 Percentual de hoje: {worked_pct:.1f}%",  # <-- nova linha
+                f"🧭 Líder: {leader_text}",
             ]
             tg_send("\n".join(txt_lines))
 
