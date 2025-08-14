@@ -2,7 +2,7 @@ name: RR Alerta Tempo Trabalhado → Telegram
 
 on:
   schedule:
-    - cron: '*/10 11-23 * * 1-5'
+    - cron: '*/5 11-23 * * 1-5'
   workflow_dispatch: {}
 
 jobs:
