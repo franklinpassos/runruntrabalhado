@@ -225,10 +225,9 @@ def split_message(text: str, limit: int = TELEGRAM_LIMIT) -> List[str]:
         if len(remaining) <= limit:
             parts.append(remaining)
             break
-        cut = remaining.rfind("
-", 0, limit)
+        cut = remaining.rfind("\n", 0, limit)
         if cut == -1:
-            cut = remaining.rfind(" ", 0, limit)
+            cut = remaining.rfind("\n", 0, limit)
         if cut == -1:
             cut = limit
         parts.append(remaining[:cut].rstrip())
@@ -291,8 +290,7 @@ def main():
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
                 f"Líder: {leader_text}",
             ]
-            txt = "
-".join(txt_lines)
+            txt = "\n".join(txt_lines)
             tg_send(txt)
 
 if __name__ == "__main__":
