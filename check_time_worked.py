@@ -7,7 +7,7 @@ USER_TOKEN = os.environ["RUNRUN_USER_TOKEN"]
 TELEGRAM_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 DEFAULT_CAPACITY_SECONDS = int(os.getenv("DEFAULT_CAPACITY_SECONDS", "28800"))
-THRESHOLD = float(os.getenv("THRESHOLD", "1.0"))
+THRESHOLD = float(os.getenv("THRESHOLD", "0.75"))
 ONLY_TEAM_IDS = [int(x) for x in os.getenv("ONLY_TEAM_IDS", "").split(",") if x.strip()]
 EXCLUDE_USER_IDS = {x.strip() for x in os.getenv("EXCLUDE_USER_IDS", "").split(",") if x.strip()}
 INCLUDE_WEEKENDS = os.getenv("INCLUDE_WEEKENDS", "false").lower() == "true"
