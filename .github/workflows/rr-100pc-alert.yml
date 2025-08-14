@@ -1,8 +1,8 @@
-name: RR 100% Tempo Trabalhado → Telegram
+name: RR Alerta Tempo Trabalhado → Telegram
 
 on:
   schedule:
-    - cron: '*/5 11-23 * * 1-5'
+    - cron: '*/10 11-23 * * 1-5'
   workflow_dispatch: {}
 
 jobs:
@@ -30,11 +30,11 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           LOCAL_TZ: America/Fortaleza
           DEFAULT_CAPACITY_SECONDS: '28800'
-          THRESHOLD: '1.05'        # 105%
-          THRESHOLD2: '1.10'      # 110%
-          ALERT_WINDOW_SECONDS1: '900'   # 15 min
-          ALERT_WINDOW_SECONDS2: '900'   # 15 min
-          CATCHUP_WINDOW_SECONDS2: '7200' # 2h para cobrir saltos
+          THRESHOLD: '1.05'       # 105% (limiar 1)
+          THRESHOLD2: '1.10'      # 110% (limiar 2, com catch-up)
+          ALERT_WINDOW_SECONDS1: '900'    # janela do 105% (15 min)
+          ALERT_WINDOW_SECONDS2: '900'    # janela do 110% (15 min)
+          CATCHUP_WINDOW_SECONDS2: '7200' # catch-up extra p/ 110% (2h)
           ONLY_TEAM_IDS: ''
           EXCLUDE_USER_IDS: ''
           INCLUDE_WEEKENDS: 'false'
