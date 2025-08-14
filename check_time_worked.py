@@ -237,10 +237,9 @@ def split_message(text: str, limit: int = TELEGRAM_LIMIT) -> List[str]:
         if len(remaining) <= limit:
             parts.append(remaining)
             break
-        cut = remaining.rfind("
-", 0, limit)
+        cut = remaining.rfind("\n", 0, limit)
         if cut == -1:
-            cut = remaining.rfind(" ", 0, limit)
+            cut = remaining.rfind("\n", 0, limit)
         if cut == -1:
             cut = limit
         parts.append(remaining[:cut].rstrip())
