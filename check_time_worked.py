@@ -143,7 +143,84 @@ def get_time_worked_today() -> Dict[str, Tuple[int, int]]:
 
 # --- Mapa de menções de líderes por COLABORADOR ---
 LEADER_HANDLES: Dict[str, List[str]] = {
-    # (mantenha aqui o dicionário completo de colaborador -> ["@Lider1", "@Lider2"]) 
+    "Lara Silveira": ["@SilvaniaAuditoria"],
+    "João Gouveia": ["@SilvaniaAuditoria"],
+    "Juan Lucas": ["@SilvaniaAuditoria"],
+    "Luiza Correia": ["@SilvaniaAuditoria"],
+    "Nicolas Miranda": ["@SilvaniaAuditoria"],
+    "Pedro Vidal": ["@SilvaniaAuditoria"],
+    "Alexandre Andrade": ["@NakamuraAuditoria"],
+    "Caio Vilamaior": ["@NakamuraAuditoria"],
+    "Israel Brito": ["@NakamuraAuditoria"],
+    "Matheus Eufrásio": ["@NakamuraAuditoria"],
+    "Raul Costa": ["@NakamuraAuditoria"],
+    "Wether Rios": ["@NakamuraAuditoria"],
+    "Yuri Peixoto": ["@NakamuraAuditoria"],
+    "Ana Clara Gois": ["@FranklinAuditoria"],
+    "Cauã Amorim": ["@FranklinAuditoria"],
+    "Elissandra Alexandre": ["@FranklinAuditoria"],
+    "Lara Farias": ["@FranklinAuditoria"],
+    "Sophie Viana": ["@FranklinAuditoria"],
+    "Yara Esteves": ["@FranklinAuditoria"],
+    "Yasmin Barros": ["@FranklinAuditoria"],
+    "Bruno Rocha": ["@LaisAuditoria", "@SamaraAuditoria"],
+    "Lucas Marques": ["@LaisAuditoria", "@SamaraAuditoria"],
+    "Marcos Morais": ["@LaisAuditoria", "@SamaraAuditoria"],
+    "Sylvia Meyer": ["@LaisAuditoria", "@SamaraAuditoria"],
+    "Amadeu Henrique": ["@LaisAuditoria", "@SamaraAuditoria"],
+    "Carlos Silva": ["@LaisAuditoria", "@SamaraAuditoria"],
+    "Judite Sombra": ["@LaisAuditoria", "@SamaraAuditoria"],
+    "Rafael Fontenelle": ["@LaisAuditoria", "@SamaraAuditoria"],
+    "Victor Teles": ["@JuliaAuditoria"],
+    "Vinícius Campos": ["@JuliaAuditoria"],
+    "Gustavo dos Santos": ["@JuliaAuditoria"],
+    "Julie Santander": ["@JuliaAuditoria"],
+    "Kaio de Oliveira": ["@JuliaAuditoria"],
+    "Nicole Vasconcelos": ["@JuliaAuditoria"],
+    "Vivian Rodrigues": ["@JuliaAuditoria"],
+    "Ana Martha Vazquez": ["@BrunoAuditoria"],
+    "Bruno Montenegro": ["@BrunoAuditoria"],
+    "Daniel Costa": ["@BrunoAuditoria"],
+    "Fábio Assunção": ["@BrunoAuditoria"],
+    "Franklin Passos": ["@BrunoAuditoria"],
+    "Júlia Trindade": ["@BrunoAuditoria"],
+    "Lais Melo": ["@BrunoAuditoria"],
+    "Samara Amorim": ["@BrunoAuditoria"],
+    "Silvânia Bertulina": ["@BrunoAuditoria"],
+    "Wilian Nakamura": ["@BrunoAuditoria"],
+    "Barbara Fraga": ["@FabioAuditoria"],
+    "Caio Chandler": ["@FabioAuditoria"],
+    "Emanuel Guimarães": ["@FabioAuditoria"],
+    "Valmir Soares": ["@FabioAuditoria"],
+    "Guilherme Alencar": ["@FabioAuditoria"],
+    "Jose Vitor": ["@FabioAuditoria"],
+    "Lorenzo Silva": ["@FabioAuditoria"],
+    "Manoel Victor": ["@FabioAuditoria"],
+    "Thiago Beserra": ["@FabioAuditoria"],
+    "Thiago Pereira": ["@FabioAuditoria"],
+    "Joyce Rolim": ["@DanielAuditoria"],
+    "Emilly Souza": ["@DanielAuditoria"],
+    "Maria Clara Assunção": ["@DanielAuditoria"],
+    "Rafael Soares": ["@DanielAuditoria"],
+    "Remulo Wesley": ["@DanielAuditoria"],
+    "Rene Filho": ["@DanielAuditoria"],
+    "Carlos Heitor": ["@AnaAuditoria"],
+    "Flavio Sousa": ["@AnaAuditoria"],
+    "Fernanda Rabello": ["@AnaAuditoria"],
+    "Glailson Oliveira": ["@AnaAuditoria"],
+    "Joao Vitor": ["@AnaAuditoria"],
+    "Maicon Monteiro": ["@AnaAuditoria"],
+    "Sthefany Araújo": ["@AnaAuditoria"],
+    "Igor Benevides": ["@SamaraAuditoria", "@LaisAuditoria"],
+    "Lívia Souza": ["@SamaraAuditoria", "@LaisAuditoria"],
+    "Ana Rosa Freitas": ["@SamaraAuditoria", "@LaisAuditoria"],
+    "Bruna Lima": ["@SamaraAuditoria", "@LaisAuditoria"],
+    "Clara Gurgel": ["@SamaraAuditoria", "@LaisAuditoria"],
+    "Lilian Alves": ["@SamaraAuditoria", "@LaisAuditoria"],
+    "Thalita Gomes": ["@SamaraAuditoria", "@LaisAuditoria"],
+    "Yasmin Queiroz": ["@SamaraAuditoria", "@LaisAuditoria"],
+    "João Victor Fortes": ["@DanielAuditoria"],
+    "Ana Clara Aragão": ["@SilvaniaAuditoria"],
 }
 
 # Fallback: se líder não identificado, mencionar estes dois
@@ -160,9 +237,10 @@ def split_message(text: str, limit: int = TELEGRAM_LIMIT) -> List[str]:
         if len(remaining) <= limit:
             parts.append(remaining)
             break
-        cut = remaining.rfind("\n", 0, limit)
+        cut = remaining.rfind("
+", 0, limit)
         if cut == -1:
-            cut = remaining.rfind("\n", 0, limit)
+            cut = remaining.rfind(" ", 0, limit)
         if cut == -1:
             cut = limit
         parts.append(remaining[:cut].rstrip())
@@ -230,7 +308,7 @@ def main():
             leader_text = " ".join(leaders)
             pct = int(THRESHOLD2 * 100)
             txt_lines = [
-                f"⚠️Alerta: {pct}% do tempo trabalhado atingido",
+                f"⚠️ Alerta: {pct}% do tempo trabalhado atingido",
                 f"Auditor: {u_name}",
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
                 f"Líder: {leader_text}",
@@ -251,7 +329,7 @@ def main():
             leader_text = " ".join(leaders)
             pct = int(THRESHOLD1 * 100)
             txt_lines = [
-                f"⚠️Alerta: {pct}% do tempo trabalhado atingido",
+                f"⚠️ Alerta: {pct}% do tempo trabalhado atingido",
                 f"Auditor: {u_name}",
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
                 f"Líder: {leader_text}",
