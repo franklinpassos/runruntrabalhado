@@ -7,7 +7,17 @@ USER_TOKEN = os.environ["RUNRUN_USER_TOKEN"]
 TELEGRAM_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 DEFAULT_CAPACITY_SECONDS = int(os.getenv("DEFAULT_CAPACITY_SECONDS", "28800"))
-THRESHOLD = float(os.getenv("THRESHOLD", "0.7"))
+
+# Limiar principal e segundo limiar (catch-up)
+THRESHOLD1 = float(os.getenv("THRESHOLD", "1.05"))    # 105%
+THRESHOLD2 = float(os.getenv("THRESHOLD2", "1.10"))   # 110%
+
+# Janelas (segundos) para disparar apenas na passagem pelos limiares
+ALERT_WINDOW_SECONDS1 = int(os.getenv("ALERT_WINDOW_SECONDS1", "900"))   # 15 min (105%)
+ALERT_WINDOW_SECONDS2 = int(os.getenv("ALERT_WINDOW_SECONDS2", "900"))   # 15 min (110%)
+# Catch-up extra para o segundo limiar (cobre saltos grandes, ex.: 90% → 120%)
+CATCHUP_WINDOW_SECONDS2 = int(os.getenv("CATCHUP_WINDOW_SECONDS2", "7200"))  # 2h
+
 ONLY_TEAM_IDS = [int(x) for x in os.getenv("ONLY_TEAM_IDS", "").split(",") if x.strip()]
 EXCLUDE_USER_IDS = {x.strip() for x in os.getenv("EXCLUDE_USER_IDS", "").split(",") if x.strip()}
 INCLUDE_WEEKENDS = os.getenv("INCLUDE_WEEKENDS", "false").lower() == "true"
@@ -59,12 +69,11 @@ def rr_get(path: str, params: Dict[str, Any] = None) -> Any:
     return r.json()
 
 # Paginação geral baseada no header Link/X-Item-Range (page/limit)
-# Docs indicam uso de page/limit/offset e header Link (rel="next").
 # Agrega os campos de interesse (result/capacity) ao longo das páginas.
 
 def rr_get_paginated_time_worked(path: str, params: Dict[str, Any]) -> Dict[str, Any]:
     page = 1
-    limit = 50
+    limit = 100
     all_result: List[Dict[str, Any]] = []
     all_capacity: List[Dict[str, Any]] = []
     while True:
@@ -134,85 +143,11 @@ def get_time_worked_today() -> Dict[str, Tuple[int, int]]:
 
 # --- Mapa de menções de líderes por COLABORADOR ---
 LEADER_HANDLES: Dict[str, List[str]] = {
-    "Lara Silveira": ["@SilvaniaAuditoria"],
-    "João Gouveia": ["@SilvaniaAuditoria"],
-    "Juan Lucas": ["@SilvaniaAuditoria"],
-    "Luiza Correia": ["@SilvaniaAuditoria"],
-    "Nicolas Miranda": ["@SilvaniaAuditoria"],
-    "Pedro Vidal": ["@SilvaniaAuditoria"],
-    "Alexandre Andrade": ["@NakamuraAuditoria"],
-    "Caio Vilamaior": ["@NakamuraAuditoria"],
-    "Israel Brito": ["@NakamuraAuditoria"],
-    "Matheus Eufrásio": ["@NakamuraAuditoria"],
-    "Raul Costa": ["@NakamuraAuditoria"],
-    "Wether Rios": ["@NakamuraAuditoria"],
-    "Yuri Peixoto": ["@NakamuraAuditoria"],
-    "Ana Clara Gois": ["@FranklinAuditoria"],
-    "Cauã Amorim": ["@FranklinAuditoria"],
-    "Elissandra Alexandre": ["@FranklinAuditoria"],
-    "Lara Farias": ["@FranklinAuditoria"],
-    "Sophie Viana": ["@FranklinAuditoria"],
-    "Yara Esteves": ["@FranklinAuditoria"],
-    "Yasmin Barros": ["@FranklinAuditoria"],
-    "Bruno Rocha": ["@LaisAuditoria", "@SamaraAuditoria"],
-    "Lucas Marques": ["@LaisAuditoria", "@SamaraAuditoria"],
-    "Marcos Morais": ["@LaisAuditoria", "@SamaraAuditoria"],
-    "Sylvia Meyer": ["@LaisAuditoria", "@SamaraAuditoria"],
-    "Amadeu Henrique": ["@LaisAuditoria", "@SamaraAuditoria"],
-    "Carlos Silva": ["@LaisAuditoria", "@SamaraAuditoria"],
-    "Judite Sombra": ["@LaisAuditoria", "@SamaraAuditoria"],
-    "Rafael Fontenelle": ["@LaisAuditoria", "@SamaraAuditoria"],
-    "Victor Teles": ["@JuliaAuditoria"],
-    "Vinícius Campos": ["@JuliaAuditoria"],
-    "Gustavo dos Santos": ["@JuliaAuditoria"],
-    "Julie Santander": ["@JuliaAuditoria"],
-    "Kaio de Oliveira": ["@JuliaAuditoria"],
-    "Nicole Vasconcelos": ["@JuliaAuditoria"],
-    "Vivian Rodrigues": ["@JuliaAuditoria"],
-    "Ana Martha Vazquez": ["@BrunoAuditoria"],
-    "Bruno Montenegro": ["@BrunoAuditoria"],
-    "Daniel Costa": ["@BrunoAuditoria"],
-    "Fábio Assunção": ["@BrunoAuditoria"],
-    "Franklin Passos": ["@BrunoAuditoria"],
-    "Júlia Trindade": ["@BrunoAuditoria"],
-    "Lais Melo": ["@BrunoAuditoria"],
-    "Samara Amorim": ["@BrunoAuditoria"],
-    "Silvânia Bertulina": ["@BrunoAuditoria"],
-    "Wilian Nakamura": ["@BrunoAuditoria"],
-    "Barbara Fraga": ["@FabioAuditoria"],
-    "Caio Chandler": ["@FabioAuditoria"],
-    "Emanuel Guimarães": ["@FabioAuditoria"],
-    "Valmir Soares": ["@FabioAuditoria"],
-    "Guilherme Alencar": ["@FabioAuditoria"],
-    "Jose Vitor": ["@FabioAuditoria"],
-    "Lorenzo Silva": ["@FabioAuditoria"],
-    "Manoel Victor": ["@FabioAuditoria"],
-    "Thiago Beserra": ["@FabioAuditoria"],
-    "Thiago Pereira": ["@FabioAuditoria"],
-    "Joyce Rolim": ["@DanielAuditoria"],
-    "Emilly Souza": ["@DanielAuditoria"],
-    "Maria Clara Assunção": ["@DanielAuditoria"],
-    "Rafael Soares": ["@DanielAuditoria"],
-    "Remulo Wesley": ["@DanielAuditoria"],
-    "Rene Filho": ["@DanielAuditoria"],
-    "Carlos Heitor": ["@AnaAuditoria"],
-    "Flavio Sousa": ["@AnaAuditoria"],
-    "Fernanda Rabello": ["@AnaAuditoria"],
-    "Glailson Oliveira": ["@AnaAuditoria"],
-    "Joao Vitor": ["@AnaAuditoria"],
-    "Maicon Monteiro": ["@AnaAuditoria"],
-    "Sthefany Araújo": ["@AnaAuditoria"],
-    "Igor Benevides": ["@SamaraAuditoria", "@LaisAuditoria"],
-    "Lívia Souza": ["@SamaraAuditoria", "@LaisAuditoria"],
-    "Ana Rosa Freitas": ["@SamaraAuditoria", "@LaisAuditoria"],
-    "Bruna Lima": ["@SamaraAuditoria", "@LaisAuditoria"],
-    "Clara Gurgel": ["@SamaraAuditoria", "@LaisAuditoria"],
-    "Lilian Alves": ["@SamaraAuditoria", "@LaisAuditoria"],
-    "Thalita Gomes": ["@SamaraAuditoria", "@LaisAuditoria"],
-    "Yasmin Queiroz": ["@SamaraAuditoria", "@LaisAuditoria"],
-    "João Victor Fortes": ["@DanielAuditoria"],
-    "Ana Clara Aragão": ["@SilvaniaAuditoria"],
+    # (mantenha aqui o dicionário completo de colaborador -> ["@Lider1", "@Lider2"]) 
 }
+
+# Fallback: se líder não identificado, mencionar estes dois
+LEADER_FALLBACK: List[str] = ["@BrunoAuditoria", "@FranklinAuditoria"]
 
 # --- Telegram: split seguro ---
 
@@ -225,9 +160,10 @@ def split_message(text: str, limit: int = TELEGRAM_LIMIT) -> List[str]:
         if len(remaining) <= limit:
             parts.append(remaining)
             break
-        cut = remaining.rfind("\n", 0, limit)
+        cut = remaining.rfind("
+", 0, limit)
         if cut == -1:
-            cut = remaining.rfind("\n", 0, limit)
+            cut = remaining.rfind(" ", 0, limit)
         if cut == -1:
             cut = limit
         parts.append(remaining[:cut].rstrip())
@@ -275,23 +211,54 @@ def main():
             continue
         if capacity <= 0:
             continue
-        if worked >= capacity * THRESHOLD:
+
+        # Calcula limiares em segundos e deltas
+        t1 = int(capacity * THRESHOLD1)
+        t2 = int(capacity * THRESHOLD2)
+        d1 = worked - t1
+        d2 = worked - t2
+
+        # Limiar 2 (110%) com catch-up: usa a maior janela entre ALERT_WINDOW_SECONDS2 e CATCHUP_WINDOW_SECONDS2
+        catchup2 = max(ALERT_WINDOW_SECONDS2, CATCHUP_WINDOW_SECONDS2)
+        if worked >= t2 and 0 <= d2 <= catchup2:
             user = users_by_id.get(uid, {})
             u_name = user.get("name", uid)
             hours = worked / 3600.0
             cap_h = capacity / 3600.0
-
             leaders = LEADER_HANDLES.get(u_name, [])
-            leader_text = " ".join(leaders) if leaders else "(líder não mapeado)"
-
+            if not leaders:
+                leaders = LEADER_FALLBACK
+            leader_text = " ".join(leaders)
+            pct = int(THRESHOLD2 * 100)
             txt_lines = [
-                "⚠️Alerta: 70% do tempo trabalhado atingido",
+                f"⚠️Alerta: {pct}% do tempo trabalhado atingido",
                 f"Auditor: {u_name}",
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
                 f"Líder: {leader_text}",
             ]
-            txt = "\n".join(txt_lines)
-            tg_send(txt)
+            tg_send("
+".join(txt_lines))
+            continue  # não manda o de 105% nesta execução
+
+        # Limiar 1 (105%) com janela padrão
+        if worked >= t1 and 0 <= d1 <= ALERT_WINDOW_SECONDS1:
+            user = users_by_id.get(uid, {})
+            u_name = user.get("name", uid)
+            hours = worked / 3600.0
+            cap_h = capacity / 3600.0
+            leaders = LEADER_HANDLES.get(u_name, [])
+            if not leaders:
+                leaders = LEADER_FALLBACK
+            leader_text = " ".join(leaders)
+            pct = int(THRESHOLD1 * 100)
+            txt_lines = [
+                f"⚠️Alerta: {pct}% do tempo trabalhado atingido",
+                f"Auditor: {u_name}",
+                f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
+                f"Líder: {leader_text}",
+            ]
+            tg_send("
+".join(txt_lines))
 
 if __name__ == "__main__":
     main()
