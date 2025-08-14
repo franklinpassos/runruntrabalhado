@@ -332,8 +332,7 @@ def main():
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
                 f"Líder: {leader_text}",
             ]
-            tg_send("
-".join(txt_lines))
+            tg_send("\n".join(txt_lines))
 
 if __name__ == "__main__":
     main()
