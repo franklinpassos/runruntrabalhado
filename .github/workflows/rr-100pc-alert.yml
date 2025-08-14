@@ -1,0 +1,38 @@
+name: RR 100% Tempo Trabalhado → Telegram
+
+on:
+  schedule:
+    - cron: '*/10 11-23 * * 1-5'
+  workflow_dispatch: {}
+
+jobs:
+  run-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run script
+        env:
+          RUNRUN_APP_KEY: ${{ secrets.RUNRUN_APP_KEY }}
+          RUNRUN_USER_TOKEN: ${{ secrets.RUNRUN_USER_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          LOCAL_TZ: America/Fortaleza
+          DEFAULT_CAPACITY_SECONDS: '28800'
+          THRESHOLD: '1.0'
+          ONLY_TEAM_IDS: ''
+          EXCLUDE_USER_IDS: ''
+          INCLUDE_WEEKENDS: 'false'
+        run: |
+          python check_time_worked.py
