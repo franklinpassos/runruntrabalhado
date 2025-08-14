@@ -312,8 +312,7 @@ def main():
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
                 f"Líder: {leader_text}",
             ]
-            tg_send("
-".join(txt_lines))
+            tg_send("\n".join(txt_lines))
             continue  # não manda o de 105% nesta execução
 
         # Limiar 1 (105%) com janela padrão
