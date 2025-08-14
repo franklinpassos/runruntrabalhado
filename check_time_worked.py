@@ -64,7 +64,7 @@ def rr_get(path: str, params: Dict[str, Any] = None) -> Any:
 
 def rr_get_paginated_time_worked(path: str, params: Dict[str, Any]) -> Dict[str, Any]:
     page = 1
-    limit = 100
+    limit = 50
     all_result: List[Dict[str, Any]] = []
     all_capacity: List[Dict[str, Any]] = []
     while True:
@@ -286,7 +286,7 @@ def main():
 
             txt_lines = [
                 "Alerta: 100% do tempo trabalhado atingido",
-                f"Colaborador: {u_name}",
+                f"Auditor: {u_name}",
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
                 f"Líder: {leader_text}",
             ]
