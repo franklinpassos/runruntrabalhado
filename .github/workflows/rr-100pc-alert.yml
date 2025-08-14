@@ -30,7 +30,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           LOCAL_TZ: America/Fortaleza
           DEFAULT_CAPACITY_SECONDS: '28800'
-          THRESHOLD: '1.0'
+          THRESHOLD: '0.7'
           ONLY_TEAM_IDS: ''
           EXCLUDE_USER_IDS: ''
           INCLUDE_WEEKENDS: 'false'
