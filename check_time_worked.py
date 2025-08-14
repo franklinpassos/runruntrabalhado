@@ -301,15 +301,17 @@ def main():
             u_name = user.get("name", uid)
             hours = worked / 3600.0
             cap_h = capacity / 3600.0
+            worked_pct = (worked / capacity) * 100.0  # <-- percentual do dia
             leaders = LEADER_HANDLES.get(u_name, [])
             if not leaders:
                 leaders = LEADER_FALLBACK
             leader_text = " ".join(leaders)
-            pct = int(THRESHOLD2 * 100)
+            limit_pct = int(THRESHOLD2 * 100)
             txt_lines = [
-                f"⚠️ Alerta: {pct}% do tempo trabalhado atingido",
+                f"⚠️ Alerta: {limit_pct}% do tempo trabalhado atingido",
                 f"Auditor: {u_name}",
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
+                f"Percentual de hoje: {worked_pct:.1f}%",  # <-- nova linha
                 f"Líder: {leader_text}",
             ]
             tg_send("\n".join(txt_lines))
@@ -321,15 +323,17 @@ def main():
             u_name = user.get("name", uid)
             hours = worked / 3600.0
             cap_h = capacity / 3600.0
+            worked_pct = (worked / capacity) * 100.0  # <-- percentual do dia
             leaders = LEADER_HANDLES.get(u_name, [])
             if not leaders:
                 leaders = LEADER_FALLBACK
             leader_text = " ".join(leaders)
-            pct = int(THRESHOLD1 * 100)
+            limit_pct = int(THRESHOLD1 * 100)
             txt_lines = [
-                f"⚠️ Alerta: {pct}% do tempo trabalhado atingido",
+                f"⚠️ Alerta: {limit_pct}% do tempo trabalhado atingido",
                 f"Auditor: {u_name}",
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
+                f"Percentual de hoje: {worked_pct:.1f}%",  # <-- nova linha
                 f"Líder: {leader_text}",
             ]
             tg_send("\n".join(txt_lines))
