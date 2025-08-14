@@ -285,7 +285,7 @@ def main():
             leader_text = " ".join(leaders) if leaders else "(líder não mapeado)"
 
             txt_lines = [
-                "Alerta: 70% do tempo trabalhado atingido",
+                "⚠️Alerta: 70% do tempo trabalhado atingido",
                 f"Auditor: {u_name}",
                 f"Trabalhado hoje: {hours:.2f}h de {cap_h:.2f}h",
                 f"Líder: {leader_text}",
